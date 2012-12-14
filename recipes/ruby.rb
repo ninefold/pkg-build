@@ -72,7 +72,8 @@ if(node[:pkg_build][:use_pkg_build_ruby])
   node.set[:pkg_build][:gems][:exec] = '/usr/bin/gem'
   node.set[:pkg_build][:passenger][:ruby_bin] = '/usr/bin'
 
-  gem_package 'fpm' do
+  gem_package 'custom ruby fpm' do
+    package_name 'fpm'
     notifies :create, 'ruby_block[update fpm path]', :immediately
     gem_binary '/usr/bin/gem'
   end
