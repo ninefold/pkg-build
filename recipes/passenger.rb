@@ -1,9 +1,10 @@
 include_recipe 'pkg-build::deps'
 
-libpassenger_dependencies = %w(apache2 apache2-mpm-prefork) + [[node[:pkg_build][:pkg_prefix], 'rubygem-passenger'].compact.join('-')]
-
 if(node[:pkg_build][:use_pkg_build_ruby])
-  libpassenger_dependencies << [node[:pkg_build][:pkg_prefix], "ruby#{node[:pkg_build][:ruby][:version]}"].compact.join('-')
+  node.set[:pkg_build][:passenger][:ruby_dependency] = [
+    node[:pkg_build][:pkg_prefix], 
+    "ruby#{node[:pkg_build][:ruby][:version]}"
+  ].compact.join('-')
 end
 
 %w(libcurl4-gnutls-dev apache2 apache2-prefork-dev).each do |dep_pkg|
@@ -11,6 +12,7 @@ end
 end
 
 libpassenger_name = [node[:pkg_build][:pkg_prefix], 'libapache2-mod-passenger'].compact.join('-')
+passenger_gem_name = [node[:pkg_build][:pkg_prefix], 'rubygem-passenger'].compact.join('-')
 
 builder_gem libpassenger_name do
   gem_name 'passenger'
@@ -26,7 +28,8 @@ builder_gem libpassenger_name do
   ]
 end
 
-fpm_tng_package [node[:pkg_build][:pkg_prefix], 'rubygem-passenger'].compact.join('-') do
+
+fpm_tng_package passenger_gem_name do
   input_type 'gem'
   output_type 'deb'
   description 'Passenger gem installation'
@@ -49,6 +52,8 @@ fpm_tng_package libpassenger_name do
   output_type 'deb'
   description 'Passenger apache module installation'
   chdir File.join(node[:builder][:packaging_dir], libpassenger_name)
-  depends libpassenger_dependencies
+  depends [
+    'apache2', 'apache2-mpm-prefork', passenger_gem_name, node[:pkg_build][:passenger][:ruby_dependency]
+  ].compact
   reprepro true
 end
