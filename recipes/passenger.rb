@@ -1,5 +1,16 @@
 include_recipe 'pkg-build::deps'
 
+ruby_block 'Detect omnibus ruby' do
+  block do
+    if(node[:languages][:ruby][:ruby_bin].include?('/opt/chef'))
+      raise 'Cannot build passenger against omnibus Chef Ruby installation!'
+    end
+  end
+  not_if do
+    node[:pkg_build][:passenger][:allow_omnibus_chef_ruby]
+  end
+end
+
 if(node[:pkg_build][:use_pkg_build_ruby])
   node.set[:pkg_build][:passenger][:ruby_dependency] = [
     node[:pkg_build][:pkg_prefix], 
