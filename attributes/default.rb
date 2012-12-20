@@ -1,7 +1,7 @@
 default[:pkg_build][:builder] = false
 default[:pkg_build][:pkg_prefix] = 'hw'
 default[:pkg_build][:use_pkg_build_ruby] = false
-default[:pkg_build][:gems][:exec] = File.join(node.languages.ruby.bin_dir, 'gem')
+default[:pkg_build][:gems][:exec] = node.languages.ruby.gem_bin
 default[:pkg_build][:passenger][:ruby_bin] = node.languages.ruby.bin_dir
 default[:pkg_build][:passenger][:root] = File.dirname(node.languages.ruby.bin_dir)
 default[:pkg_build][:passenger][:version] = '3.0.18'

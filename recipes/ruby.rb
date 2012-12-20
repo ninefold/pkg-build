@@ -75,7 +75,7 @@ if(node[:pkg_build][:use_pkg_build_ruby])
   # something to default them into the resource setup in the provider. Or having
   # block value attributes to make attribute values execution time discoverable. heh.
   node.default[:pkg_build][:gems][:exec] = '/usr/bin/gem'
-  node.default[:pkg_build][:passenger][:ruby_bin] = '/usr/bin/ruby'
+  node.default[:pkg_build][:passenger][:ruby_bin] = '/usr/bin'
   node.default[:pkg_build][:passenger][:root] = '/usr'
 
   gem_package 'custom ruby fpm' do
