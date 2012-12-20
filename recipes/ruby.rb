@@ -68,9 +68,15 @@ if(node[:pkg_build][:use_pkg_build_ruby])
   package ruby_name do
     notifies :reload, resources(:ohai => 'ruby'), :immediately
   end
-
-  node.set[:pkg_build][:gems][:exec] = '/usr/bin/gem'
-  node.set[:pkg_build][:passenger][:ruby_bin] = '/usr/bin'
+  
+  # NOTE: What would be nice would be to reload these values automagically
+  # by subscribing to the ohai reload. However, that happens at execution time
+  # and the resources using these already have their values. So, it might be
+  # something to default them into the resource setup in the provider. Or having
+  # block value attributes to make attribute values execution time discoverable. heh.
+  node.default[:pkg_build][:gems][:exec] = '/usr/bin/gem'
+  node.default[:pkg_build][:passenger][:ruby_bin] = '/usr/bin/ruby'
+  node.default[:pkg_build][:passenger][:root] = '/usr'
 
   gem_package 'custom ruby fpm' do
     package_name 'fpm'
