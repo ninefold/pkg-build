@@ -23,11 +23,10 @@ builder_gem libpassenger_name do
     'mkdir -p $PKG_DIR/etc/apache2/mods-available',
     'mkdir -p $PKG_DIR/usr/lib/apache2/modules',
     'cp ext/apache2/mod_passenger.so $PKG_DIR/usr/lib/apache2/modules',
-    "echo \"<IfModule mod_passenger.c>\\n  PassengerRoot /usr\n  PassengerRuby #{node[:pkg_build][:passenger][:ruby_bin]}/ruby\\n</IfModule>\\n\" > $PKG_DIR/etc/apache2/mods-available/passenger.conf",
+    "echo \"<IfModule mod_passenger.c>\\n  PassengerRoot #{node[:pkg_build][:passenger][:root]}\n  PassengerRuby #{node[:pkg_build][:passenger][:ruby_bin]}/ruby\\n</IfModule>\\n\" > $PKG_DIR/etc/apache2/mods-available/passenger.conf",
     "echo \"LoadModule passenger_module /usr/lib/apache2/modules/mod_passenger.so\" > $PKG_DIR/etc/apache2/mods-available/passenger.load"
   ]
 end
-
 
 fpm_tng_package passenger_gem_name do
   input_type 'gem'
@@ -56,4 +55,22 @@ fpm_tng_package libpassenger_name do
     'apache2', 'apache2-mpm-prefork', passenger_gem_name, node[:pkg_build][:passenger][:ruby_dependency]
   ].compact
   reprepro true
+end
+
+if(node[:pkg_build][:passenger][:dummy_rake_install])
+  rake_name = [node[:pkg_build][:pkg_prefix], 'rubygem', 'rake'].compact.join('-')
+
+  builder_dir rake_name do
+  end
+
+  reprepro_deb rake_name do
+    action :remove
+  end
+
+  fpm_tng_package rake_name do
+    output_type 'deb'
+    description 'Empty rake installation to prevent conflicts with ruby provided rake'
+    chdir File.join(node[:builder][:packaging_dir], rake_name)
+    reprepro true
+  end
 end
