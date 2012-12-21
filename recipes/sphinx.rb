@@ -17,7 +17,7 @@ builder_remote sphinx_name do
   # creates 
 end
 
-fpm_tng_package 'sphinxsearch' do
+fpm_tng_package [node[:pkg_build][:prefix], 'sphinxsearch'].compact.join('-') do
   output_type 'deb'
   description 'Sphinx search'
   depends %w(libc6 libexpat1 libgcc1 libmysqlclient18 libpq5 libstdc++6 libstemmer0d zlib1g)
