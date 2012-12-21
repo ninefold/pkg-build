@@ -47,7 +47,7 @@ end
 fpm_tng_gemdeps 'passenger' do
   gem_package_name_prefix [node[:pkg_build][:pkg_prefix], 'rubygem'].compact.join('-')
   gem_gem node[:pkg_build][:gems][:exec]
-  reprepro true
+  reprepro node[:pkg_build][:reprepro]
   version '3.0.18'
 end
 
@@ -59,7 +59,7 @@ fpm_tng_package libpassenger_name do
   depends [
     'apache2', 'apache2-mpm-prefork', passenger_gem_name, node[:pkg_build][:passenger][:ruby_dependency]
   ].compact
-  reprepro true
+  reprepro node[:pkg_build][:reprepro]
 end
 
 fpm_tng_package passenger_gem_name do
@@ -68,7 +68,7 @@ fpm_tng_package passenger_gem_name do
   description 'Passenger apache module installation'
   chdir File.join(node[:builder][:packaging_dir], 'passenger', 'gem')
   depends %w(fastthread daemon-controller rack).map{|x|[node[:pkg_build][:pkg_prefix], 'rubygem', x].compact.join('-') }
-  reprepro true
+  reprepro node[:pkg_build][:reprepro]
 end
 
 if(node[:pkg_build][:passenger][:dummy_rake_install])
@@ -83,8 +83,9 @@ if(node[:pkg_build][:passenger][:dummy_rake_install])
 
   fpm_tng_package rake_name do
     output_type 'deb'
+    version '99.9.9'
     description 'Empty rake installation to prevent conflicts with ruby provided rake'
     chdir File.join(node[:builder][:packaging_dir], rake_name)
-    reprepro true
+    reprepro node[:pkg_build][:reprepro]
   end
 end

@@ -37,7 +37,7 @@ fpm_tng_package ruby_name do
     libtinfo5 libyaml-0-2 zlib1g
   )
   # provides - rake gem
-  reprepro true
+  reprepro node[:pkg_build][:reprepro]
 end
 
 if(node[:pkg_build][:use_pkg_build_ruby])

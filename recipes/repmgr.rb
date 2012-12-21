@@ -40,6 +40,6 @@ fpm_tng_package [node[:pkg_build][:prefix], 'repmgr'].compact.join('-') do
   chdir File.join(node[:builder][:packaging_dir], "repmgr-#{node[:pkg_build][:repmgr][:version]}")
   after_install repmgr_postinst
   depends %w(libpq-dev)
-  reprepro true
+  reprepro node[:pkg_build][:reprepro]
 end
 
