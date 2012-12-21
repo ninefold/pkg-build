@@ -66,6 +66,7 @@ if(node[:pkg_build][:use_pkg_build_ruby])
   node.default[:pkg_build][:gems][:exec] = '/usr/bin/gem'
   node.default[:pkg_build][:passenger][:ruby_bin] = '/usr/bin'
   node.default[:pkg_build][:passenger][:root] = '/usr/local'
+  node.default[:pkg_build][:gems][:dir] = '/usr/local/lib/ruby/gems/1.9.1'
 
   gem_package 'custom ruby fpm' do
     package_name 'fpm'

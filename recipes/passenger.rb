@@ -24,31 +24,24 @@ end
 
 libpassenger_name = [node[:pkg_build][:pkg_prefix], 'libapache2-mod-passenger'].compact.join('-')
 passenger_gem_name = [node[:pkg_build][:pkg_prefix], 'rubygem-passenger'].compact.join('-')
-
-builder_gem libpassenger_name do
-  gem_name 'passenger'
-  gem_version '3.0.18'
-  suffix_cwd 'passenger-3.0.18'
+gem_prefix = node[:pkg_build][:gems][:dir] || node[:languages][:ruby][:gems_dir]
+pass_prefix = "gems/passenger-#{node[:pkg_build][:passenger][:version]}"
+builder_dir 'passenger' do
+  init_command "#{node[:pkg_build][:gems][:exec]} install --install-dir . --no-ri --no-rdoc --ignore-dependencies -E --version #{node[:pkg_build][:passenger][:version]} passenger"
+  suffix_cwd "gems/passenger-#{node[:pkg_build][:passenger][:version]}"
   commands [
     "#{node[:pkg_build][:passenger][:ruby_bin]}/rake apache2",
-    'mkdir -p $PKG_DIR/etc/apache2/mods-available',
-    'mkdir -p $PKG_DIR/usr/lib/apache2/modules',
-    'cp ext/apache2/mod_passenger.so $PKG_DIR/usr/lib/apache2/modules',
-    "echo \"<IfModule mod_passenger.c>\\n  PassengerRoot #{node[:pkg_build][:passenger][:root]}\n  PassengerRuby #{node[:pkg_build][:passenger][:ruby_bin]}/ruby\\n</IfModule>\\n\" > $PKG_DIR/etc/apache2/mods-available/passenger.conf",
-    "echo \"LoadModule passenger_module /usr/lib/apache2/modules/mod_passenger.so\" > $PKG_DIR/etc/apache2/mods-available/passenger.load"
+    'mkdir -p $PKG_DIR/libmod/etc/apache2/mods-available',
+    "mkdir -p $PKG_DIR/libmod/#{node[:pkg_build][:passenger][:root]}/apache2/modules",
+    "mkdir -p $PKG_DIR/libmod/#{node[:pkg_build][:passenger][:root]}/phusion-passenger",
+    "cp ext/apache2/mod_passenger.so $PKG_DIR/libmod/#{node[:pkg_build][:passenger][:root]}/apache2/modules",
+    "echo \"<IfModule mod_passenger.c>\\n  PassengerRoot #{node[:pkg_build][:gems][:dir]}/gems/passenger-#{node[:pkg_build][:passenger][:version]}\n  PassengerRuby #{node[:pkg_build][:passenger][:ruby_bin]}/ruby\\n</IfModule>\\n\" > $PKG_DIR/libmod/etc/apache2/mods-available/passenger.conf",
+    "echo \"LoadModule passenger_module #{node[:pkg_build][:passenger][:root]}/apache2/modules/mod_passenger.so\" > $PKG_DIR/libmod/etc/apache2/mods-available/passenger.load",
+    "mkdir -p $PKG_DIR/gem/#{node[:pkg_build][:gems][:dir]}",
+    "cp -a ../../gems $PKG_DIR/gem/#{node[:pkg_build][:gems][:dir]}",
+    "cp -a ../../specifications $PKG_DIR/gem/#{node[:pkg_build][:gems][:dir]}",
+    "cp -a ../../bin $PKG_DIR/gem/#{node[:pkg_build][:ruby_bin]}",
   ]
-end
-
-fpm_tng_package passenger_gem_name do
-  input_type 'gem'
-  output_type 'deb'
-  description 'Passenger gem installation'
-  version '3.0.18'
-  gem_package_name_prefix [node[:pkg_build][:pkg_prefix], 'rubygem'].compact.join('-')
-  gem_fix_name false
-  gem_gem node[:pkg_build][:gems][:exec]
-  input_args 'passenger'
-  reprepro true
 end
 
 fpm_tng_gemdeps 'passenger' do
@@ -60,11 +53,21 @@ end
 
 fpm_tng_package libpassenger_name do
   output_type 'deb'
+  version node[:pkg_build][:passenger][:version]
   description 'Passenger apache module installation'
-  chdir File.join(node[:builder][:packaging_dir], libpassenger_name)
+  chdir File.join(node[:builder][:packaging_dir], 'passenger', 'libmod')
   depends [
     'apache2', 'apache2-mpm-prefork', passenger_gem_name, node[:pkg_build][:passenger][:ruby_dependency]
   ].compact
+  reprepro true
+end
+
+fpm_tng_package passenger_gem_name do
+  output_type 'deb'
+  version node[:pkg_build][:passenger][:version]
+  description 'Passenger apache module installation'
+  chdir File.join(node[:builder][:packaging_dir], 'passenger', 'gem')
+  depends %w(fastthread daemon-controller rack).map{|x|[node[:pkg_build][:pkg_prefix], 'rubygem', x].compact.join('-') }
   reprepro true
 end
 
