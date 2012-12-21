@@ -65,7 +65,7 @@ if(node[:pkg_build][:use_pkg_build_ruby])
   # block value attributes to make attribute values execution time discoverable. heh.
   node.default[:pkg_build][:gems][:exec] = '/usr/bin/gem'
   node.default[:pkg_build][:passenger][:ruby_bin] = '/usr/bin'
-  node.default[:pkg_build][:passenger][:root] = '/usr'
+  node.default[:pkg_build][:passenger][:root] = '/usr/local'
 
   gem_package 'custom ruby fpm' do
     package_name 'fpm'
