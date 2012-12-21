@@ -36,18 +36,7 @@ fpm_tng_package ruby_name do
     ca-certificates libc6 libffi6 libgdbm3 libncursesw5 libreadline6 libssl1.0.0 
     libtinfo5 libyaml-0-2 zlib1g
   )
-  provides %w(
-    ruby1.9.1 ruby1.9.1-dev rubygems1.9.1 ruby-interpreter irb1.9.1 libdbm-ruby1.9.1 
-    libgdbm-ruby1.9.1 libopenssl-ruby1.9.1 libreadline-ruby1.9.1 hw-rubygem-rake
-  )
-  conflicts %w(
-    ruby1.9.1 ruby1.9.1-dev ruby1.9.1-full irb1.8 libdbm-ruby1.9.1 libgdbm-ruby1.9.1
-    libopenssl-ruby1.9.1 libreadline-ruby1.9.1 rdoc1.8
-  )
-  replaces %w(
-    irb1.8 libdbm-ruby1.9.1 libgdbm-ruby-1.9.1 libopenssl-ruby1.9.1
-    libreadline-ruby1.9.1 rdoc1.8 ruby1.9.1 ruby1.9.1-dev rubygems1.9.1 ruby1.9.1-full
-  )
+  # provides - rake gem
   reprepro true
 end
 
