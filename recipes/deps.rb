@@ -13,6 +13,9 @@ end
 
 include_recipe 'builder'
 include_recipe 'fpm-tng'
-include_recipe 'reprepro'
+
+if(node[:pkg_build][:reprepro])
+  include_recipe 'reprepro'
+end
 
 node.set[:pkg_build][:builder] = true
