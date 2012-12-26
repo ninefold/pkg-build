@@ -26,7 +26,7 @@ libpassenger_name = [node[:pkg_build][:pkg_prefix], 'libapache2-mod-passenger'].
 passenger_gem_name = [node[:pkg_build][:pkg_prefix], 'rubygem-passenger'].compact.join('-')
 gem_prefix = node[:pkg_build][:gems][:dir] || node[:languages][:ruby][:gems_dir]
 pass_prefix = "gems/passenger-#{node[:pkg_build][:passenger][:version]}"
-builder_dir 'passenger' do
+builder_dir "passenger-#{node[:pkg_build][:passenger][:version]}" do
   init_command "#{node[:pkg_build][:gems][:exec]} install --install-dir . --no-ri --no-rdoc --ignore-dependencies -E --version #{node[:pkg_build][:passenger][:version]} passenger"
   suffix_cwd "gems/passenger-#{node[:pkg_build][:passenger][:version]}"
   commands [
@@ -69,23 +69,4 @@ fpm_tng_package passenger_gem_name do
   chdir File.join(node[:builder][:packaging_dir], 'passenger', 'gem')
   depends %w(fastthread daemon-controller rack).map{|x|[node[:pkg_build][:pkg_prefix], 'rubygem', x].compact.join('-') }
   reprepro node[:pkg_build][:reprepro]
-end
-
-if(node[:pkg_build][:passenger][:dummy_rake_install])
-  rake_name = [node[:pkg_build][:pkg_prefix], 'rubygem', 'rake'].compact.join('-')
-
-  builder_dir rake_name do
-  end
-
-  reprepro_deb rake_name do
-    action :remove
-  end
-
-  fpm_tng_package rake_name do
-    output_type 'deb'
-    version '99.9.9'
-    description 'Empty rake installation to prevent conflicts with ruby provided rake'
-    chdir File.join(node[:builder][:packaging_dir], rake_name)
-    reprepro node[:pkg_build][:reprepro]
-  end
 end
