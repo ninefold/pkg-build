@@ -40,13 +40,10 @@ fpm_tng_package ruby_name do
   reprepro node[:pkg_build][:reprepro]
 end
 
+# TODO: If we get proper execution time attribute resolution, we can
+#       make this work in a single converge. Until then, kill the run
+#       and let it re-run so we are assured proper ruby bin is used
 if(node[:pkg_build][:use_pkg_build_ruby])
-
-  include_recipe 'ohai'
-
-  ohai "ruby" do
-    action :nothing
-  end
 
   execute 'refresh apt' do
     command 'apt-get update'
@@ -55,29 +52,14 @@ if(node[:pkg_build][:use_pkg_build_ruby])
   end
 
   package ruby_name do
-    notifies :reload, resources(:ohai => 'ruby'), :immediately
+    action :upgrade
+    notifies :create, 'ruby_block[New ruby kills chef run!]', :immediately
   end
-  
-  # NOTE: What would be nice would be to reload these values automagically
-  # by subscribing to the ohai reload. However, that happens at execution time
-  # and the resources using these already have their values. So, it might be
-  # something to default them into the resource setup in the provider. Or having
-  # block value attributes to make attribute values execution time discoverable. heh.
-  node.default[:pkg_build][:gems][:exec] = '/usr/bin/gem'
-  node.default[:pkg_build][:passenger][:ruby_bin] = '/usr/bin'
-  node.default[:pkg_build][:passenger][:root] = '/usr/local'
-  node.default[:pkg_build][:gems][:dir] = '/usr/local/lib/ruby/gems/1.9.1'
 
-  gem_package 'custom ruby fpm' do
-    package_name 'fpm'
-    notifies :create, 'ruby_block[update fpm path]', :immediately
-    gem_binary '/usr/bin/gem'
-  end
-  
-  ruby_block 'update fpm path' do
+  ruby_block 'New ruby kills chef run!' do
     action :nothing
     block do
-      node.set[:fpm_tng][:exec] = '/usr/local/bin/fpm'
+      raise "New ruby installed (#{ruby_name})! Re-run chef so proper ruby is used"
     end
   end
 end
