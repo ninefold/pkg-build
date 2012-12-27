@@ -9,8 +9,9 @@ include_recipe 'pkg-build::deps'
 end
 
 ruby_name = [node[:pkg_build][:pkg_prefix], "ruby#{node[:pkg_build][:ruby][:version]}"].compact.join('-')
+ruby_build = "#{ruby_name}-#{node[:pkg_build][:ruby][:patchlevel]}"
 
-builder_remote ruby_name do
+builder_remote ruby_build do
   remote_file ::File.join(node[:pkg_build][:ruby][:uri_base], "ruby-#{node[:pkg_build][:ruby][:version]}-#{node[:pkg_build][:ruby][:patchlevel]}.tar.gz")
   suffix_cwd "ruby-#{node[:pkg_build][:ruby][:version]}-#{node[:pkg_build][:ruby][:patchlevel]}"
   commands [
@@ -21,17 +22,18 @@ builder_remote ruby_name do
   ]
 end
 
-template File.join(node[:builder][:build_dir], ruby_name, 'postinst') do
+template File.join(node[:builder][:build_dir], ruby_build, 'postinst') do
   source 'ruby-postinst.erb'
   mode 0755
 end
 
-fpm_tng_package ruby_name do
+fpm_tng_package ruby_build do
+  package_name ruby_name
   output_type 'deb'
   description "Ruby language - #{node[:pkg_build][:ruby][:version]}-#{node[:pkg_build][:ruby][:patchlevel]}"
   version "#{node[:pkg_build][:ruby][:version]}-#{node[:pkg_build][:ruby][:patchlevel]}"
-  chdir File.join(node[:builder][:packaging_dir], ruby_name)
-  after_install File.join(node[:builder][:build_dir], ruby_name, 'postinst')
+  chdir File.join(node[:builder][:packaging_dir], ruby_build)
+  after_install File.join(node[:builder][:build_dir], ruby_build, 'postinst')
   depends %w(
     ca-certificates libc6 libffi6 libgdbm3 libncursesw5 libreadline6 libssl1.0.0 
     libtinfo5 libyaml-0-2 zlib1g
