@@ -8,8 +8,15 @@ include_recipe 'pkg-build::deps'
   package r_dep
 end
 
-ruby_name = [node[:pkg_build][:pkg_prefix], "ruby#{node[:pkg_build][:ruby][:version]}"].compact.join('-')
-ruby_build = "#{ruby_name}-#{node[:pkg_build][:ruby][:patchlevel]}"
+ruby_name = [node[:pkg_build][:pkg_prefix]]
+if(node[:pkg_build][:ruby][:suffix_version])
+  ruby_name << "ruby#{node[:pkg_build][:ruby][:version]}"
+else
+  ruby_name << 'ruby'
+end
+
+ruby_name = ruby_name.compact.join('-')
+ruby_build = "#{ruby_name}-#{node[:pkg_build][:ruby][:version]}-#{node[:pkg_build][:ruby][:patchlevel]}"
 
 builder_remote ruby_build do
   remote_file ::File.join(node[:pkg_build][:ruby][:uri_base], "ruby-#{node[:pkg_build][:ruby][:version]}-#{node[:pkg_build][:ruby][:patchlevel]}.tar.gz")
