@@ -10,11 +10,11 @@ builder_remote sphinx_name do
   remote_file "http://sphinxsearch.com/files/sphinx-#{node[:pkg_build][:sphinx][:version]}-release.tar.gz"
   suffix_cwd "#{sphinx_name}-release"
   commands [
-    './configure --prefix=/usr/local',
+    './configure --prefix=$PKG_DIR/usr/local',
     'make',
-    'make install DISTDIR=$PKG_DIR'
+    'make install'
   ]
-  # creates 
+  creates File.join(node[:builder][:packaging_dir], sphinx_name, 'usr/local/bin/searchd')
 end
 
 fpm_tng_package [node[:pkg_build][:pkg_prefix], 'sphinxsearch'].compact.join('-') do
