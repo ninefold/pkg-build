@@ -1,3 +1,7 @@
+## v0.1.4
+* Use custom service resource to restart apache2 when killing run
+* Update sphinx build commands to install to packaging directory via configure
+
 ## v0.1.3
 * Restart apache2 before killing the run
 
