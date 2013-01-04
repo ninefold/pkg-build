@@ -60,9 +60,14 @@ if(node[:pkg_build][:use_pkg_build_ruby])
 #    subscribes :run, "fpm_tng_package[#{ruby_name}]", :immediately
   end
 
+  service 'pkg-build-apache2' do
+    action :nothing
+    service_name 'apache2'
+  end
+
   package ruby_name do
     action :upgrade
-    notifies :restart, 'service[apache2]', :immediately
+    notifies :restart, 'service[pkg-build-apache2]', :immediately
     notifies :create, 'ruby_block[New ruby kills chef run!]', :immediately
   end
 
