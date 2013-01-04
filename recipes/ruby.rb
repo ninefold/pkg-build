@@ -62,6 +62,7 @@ if(node[:pkg_build][:use_pkg_build_ruby])
 
   package ruby_name do
     action :upgrade
+    notifies :restart, 'service[apache2]', :immediately
     notifies :create, 'ruby_block[New ruby kills chef run!]', :immediately
   end
 
