@@ -1,3 +1,6 @@
+## v0.1.3
+* Restart apache2 before killing the run
+
 ## v0.1.2
 * Allow ruby version suffix to be optional on package name
 
