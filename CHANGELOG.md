@@ -1,3 +1,7 @@
+## v0.1.5
+* Update passenger versioning usage and ruby naming dependency (Thanks [Warren Bain](https://github.com/thoughtcroft))
+* Add simple helper script for easily removing packages
+
 ## v0.1.4
 * Use custom service resource to restart apache2 when killing run
 * Update sphinx build commands to install to packaging directory via configure
