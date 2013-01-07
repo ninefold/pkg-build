@@ -51,7 +51,7 @@ fpm_tng_gemdeps 'passenger' do
   gem_package_name_prefix [node[:pkg_build][:pkg_prefix], 'rubygem'].compact.join('-')
   gem_gem node[:pkg_build][:gems][:exec]
   reprepro node[:pkg_build][:reprepro]
-  version '3.0.18'
+  version node[:pkg_build][:passenger][:version]
 end
 
 fpm_tng_package libpassenger_name do
