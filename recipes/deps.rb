@@ -19,3 +19,5 @@ if(node[:pkg_build][:reprepro])
 end
 
 node.set[:pkg_build][:builder] = true
+
+include_recipe 'pkg-build::helpers'
