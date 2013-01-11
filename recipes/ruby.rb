@@ -56,19 +56,32 @@ if(node[:pkg_build][:use_pkg_build_ruby])
 
   execute 'refresh apt' do
     command 'apt-get update'
-#    action :nothing
-#    subscribes :run, "fpm_tng_package[#{ruby_name}]", :immediately
-  end
-
-  service 'pkg-build-apache2' do
     action :nothing
-    service_name 'apache2'
+    subscribes :run, "fpm_tng_package[#{ruby_name}]", :immediately
   end
 
-  package ruby_name do
-    action :upgrade
-    notifies :restart, 'service[pkg-build-apache2]', :immediately
-    notifies :create, 'ruby_block[New ruby kills chef run!]', :immediately
+  if(node[:pkg_build][:reprepro])
+    service 'pkg-build-apache2' do
+      action :nothing
+      service_name 'apache2'
+    end
+
+    package ruby_name do
+      action :upgrade
+      notifies :restart, 'service[pkg-build-apache2]', :immediately
+      notifies :create, 'ruby_block[New ruby kills chef run!]', :immediately
+    end
+  else
+    execute 'install custom ruby' do
+      command "dpkg -i #{
+        File.join(
+          node[:fpm_tng][:package_dir], 
+          "#{ruby_build}-#{node[:pkg_build][:ruby][:version]}-#{node[:pkg_build][:ruby][:patchlevel]}.deb"
+        )}"
+      action :nothing
+      subscribes :run, "fpm_tng_package[#{ruby_build}]", :immediately
+      notifies :create, 'ruby_block[New ruby kills chef run!]', :immediately
+    end
   end
 
   ruby_block 'New ruby kills chef run!' do
