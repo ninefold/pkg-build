@@ -1,6 +1,7 @@
 ## v0.1.6
 * Update attribute usage within passenger recipe
 * Add redis builder
+* Initial test additions
 
 ## v0.1.5
 * Update passenger versioning usage and ruby naming dependency (Thanks [Warren Bain](https://github.com/thoughtcroft))
