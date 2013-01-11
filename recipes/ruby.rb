@@ -53,11 +53,11 @@ end
 #       make this work in a single converge. Until then, kill the run
 #       and let it re-run so we are assured proper ruby bin is used
 if(node[:pkg_build][:use_pkg_build_ruby])
-
+  # TODO: Fix fpm notifications!
   execute 'refresh apt' do
     command 'apt-get update'
-    action :nothing
-    subscribes :run, "fpm_tng_package[#{ruby_name}]", :immediately
+#    action :nothing
+#    subscribes :run, "fpm_tng_package[#{ruby_name}]", :immediately
   end
 
   if(node[:pkg_build][:reprepro])
@@ -78,8 +78,8 @@ if(node[:pkg_build][:use_pkg_build_ruby])
           node[:fpm_tng][:package_dir], 
           "#{ruby_build}-#{node[:pkg_build][:ruby][:version]}-#{node[:pkg_build][:ruby][:patchlevel]}.deb"
         )}"
-      action :nothing
-      subscribes :run, "fpm_tng_package[#{ruby_build}]", :immediately
+#      action :nothing
+#      subscribes :run, "fpm_tng_package[#{ruby_build}]", :immediately
       notifies :create, 'ruby_block[New ruby kills chef run!]', :immediately
     end
   end
