@@ -33,12 +33,12 @@ builder_dir "passenger-#{node[:pkg_build][:passenger][:version]}" do
   init_command "#{node[:pkg_build][:gems][:exec]} install --install-dir . --no-ri --no-rdoc --ignore-dependencies -E --version #{node[:pkg_build][:passenger][:version]} passenger"
   suffix_cwd "gems/passenger-#{node[:pkg_build][:passenger][:version]}"
   commands [
-    "#{node[:pkg_build][:passenger][:rake_bin]} apache2",
+    "#{node[:pkg_build][:rake_bin]} apache2",
     'mkdir -p $PKG_DIR/libmod/etc/apache2/mods-available',
     "mkdir -p $PKG_DIR/libmod/#{node[:pkg_build][:passenger][:root]}/apache2/modules",
     "mkdir -p $PKG_DIR/libmod/#{node[:pkg_build][:passenger][:root]}/phusion-passenger",
     "cp ext/apache2/mod_passenger.so $PKG_DIR/libmod/#{node[:pkg_build][:passenger][:root]}/apache2/modules",
-    "echo \"<IfModule mod_passenger.c>\\n  PassengerRoot #{node[:pkg_build][:gems][:dir]}/gems/passenger-#{node[:pkg_build][:passenger][:version]}\n  PassengerRuby #{node[:pkg_build][:passenger][:ruby_bin]}\\n</IfModule>\\n\" > $PKG_DIR/libmod/etc/apache2/mods-available/passenger.conf",
+    "echo \"<IfModule mod_passenger.c>\\n  PassengerRoot #{node[:pkg_build][:gems][:dir]}/gems/passenger-#{node[:pkg_build][:passenger][:version]}\n  PassengerRuby #{node[:pkg_build][:ruby_bin]}\\n</IfModule>\\n\" > $PKG_DIR/libmod/etc/apache2/mods-available/passenger.conf",
     "echo \"LoadModule passenger_module #{node[:pkg_build][:passenger][:root]}/apache2/modules/mod_passenger.so\" > $PKG_DIR/libmod/etc/apache2/mods-available/passenger.load",
     "mkdir -p $PKG_DIR/gem/#{node[:pkg_build][:gems][:dir]}",
     "cp -a ../../gems $PKG_DIR/gem/#{node[:pkg_build][:gems][:dir]}",
