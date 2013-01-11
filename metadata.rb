@@ -5,6 +5,8 @@ description 'Recipes for building packages'
 
 version '0.1.5'
 
+supports 'ubuntu'
+
 depends 'builder'
 depends 'fpm-tng'
 depends 'reprepro'
