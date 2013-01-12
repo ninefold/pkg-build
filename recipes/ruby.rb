@@ -80,6 +80,13 @@ if(node[:pkg_build][:use_pkg_build_ruby])
         )}"
 #      action :nothing
 #      subscribes :run, "fpm_tng_package[#{ruby_build}]", :immediately
+      not_if do
+        begin
+          %x{ruby --version}.to_s.split(' ')[1] == "#{node[:pkg_build][:ruby][:version]}#{node[:pkg_build][:ruby][:patchlevel]}"
+        rescue Errno::ENOENT
+          false
+        end
+      end
       notifies :create, 'ruby_block[New ruby kills chef run!]', :immediately
     end
   end
