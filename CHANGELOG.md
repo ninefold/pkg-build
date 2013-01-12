@@ -1,3 +1,6 @@
+## v0.1.7
+* Add not_if to direct ruby package install resource
+
 ## v0.1.6
 * Update attribute usage within passenger recipe
 * Add redis builder
