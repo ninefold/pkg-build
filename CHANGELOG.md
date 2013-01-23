@@ -1,3 +1,7 @@
+## v0.1.8
+* Use discovery for repo searching
+* Remove gem reference in add_repo
+
 ## v0.1.7
 * Add not_if to direct ruby package install resource
 

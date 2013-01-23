@@ -3,7 +3,7 @@ maintainer 'Heavy Water'
 maintainer_email 'support@hw-ops.com'
 description 'Recipes for building packages'
 
-version '0.1.7'
+version '0.1.8'
 
 supports 'ubuntu'
 
@@ -12,3 +12,4 @@ depends 'fpm-tng'
 depends 'reprepro'
 depends 'apt'
 depends 'ohai'
+depends 'discovery', '>= 0.2.0'
