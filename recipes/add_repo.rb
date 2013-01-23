@@ -1,12 +1,18 @@
 include_recipe 'apt'
 
 unless(node[:pkg_build][:builder])
-  apt_node = search(:node, 'builder:true').first
+  apt_node = discovery_search(
+    'builder:true',
+    :environment_aware => node[:pkg_build][:common_repo_env],
+    :empty_ok => true,
+    :remove_self => true,
+    :minimum_response_time => false,
+    :raw_search => true
+  )
 end
 
 # TODO: Update this once reprepro can do ssl automagically
 if(apt_node)
-  gem_gem node[:pkg_build][:gems][:exec]
   apt_url = "http://#{apt_node[:ipaddress]}:#{apt_node[:reprepro][:listen_port]}"
   apt_repository 'pkg_build_repository' do
     uri apt_url
