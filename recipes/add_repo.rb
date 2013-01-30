@@ -6,7 +6,7 @@ unless(node[:pkg_build][:builder])
     :environment_aware => node[:pkg_build][:common_repo_env],
     :empty_ok => true,
     :remove_self => true,
-    :minimum_response_time => false,
+    :minimum_response_time_sec => false,
     :raw_search => true
   )
 end
