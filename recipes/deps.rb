@@ -1,5 +1,6 @@
 # These are all the things we want all the time. So load them!
 
+include_recipe 'apt'
 include_recipe 'builder'
 include_recipe 'fpm-tng'
 
