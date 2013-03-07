@@ -1,3 +1,6 @@
+## v0.1.9
+* Update `DAEMON` path in redis-server init file
+
 ## v0.1.8
 * Use discovery for repo searching
 * Remove gem reference in add_repo
