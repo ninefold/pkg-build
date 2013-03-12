@@ -63,6 +63,7 @@ if(node[:pkg_build][:use_pkg_build_ruby])
   ruby_block 'New ruby kills chef run!' do
     action :nothing
     block do
+      node.save
       raise "New ruby installed (#{ruby_name})! Re-run chef so proper ruby is used"
     end
   end
