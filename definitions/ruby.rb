@@ -22,7 +22,7 @@ define :build_ruby, :version => nil, :patchlevel => nil, :repository => nil do
     suffix_cwd "ruby-#{r_fullversion}"
     commands [
       'autoconf',
-      "./configure --prefix=#{node[:pkg_build][:ruby][:install_prefix]} --disable-install-doc --enable-shared --with-baseruby=#{RbConfig.ruby} --program-suffix=#{r_version}",
+      "./configure --prefix=#{File.join(node[:pkg_build][:ruby][:install_prefix], "ruby-#{params[:version]}")} --bindir=#{File.join(node[:pkg_build][:ruby][:install_prefix], 'bin')} --disable-install-doc --enable-shared --with-baseruby=#{RbConfig.ruby} --program-suffix=#{r_version}",
       "make",
       "make install DESTDIR=$PKG_DIR"
     ]
@@ -31,6 +31,10 @@ define :build_ruby, :version => nil, :patchlevel => nil, :repository => nil do
 
   template File.join(node[:builder][:build_dir], ruby_build, 'postinst') do
     source 'ruby-postinst.erb'
+    variables(
+      :version => params[:version],
+      :priority => params[:version].split('.').map(&:to_i).inject(:+)
+    )
     mode 0755
   end
 
