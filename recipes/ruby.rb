@@ -61,7 +61,8 @@ if(node[:pkg_build][:isolate])
         default_fstab false
         initialize_commands [
           "dpkg -i #{ruby_dpkg}; apt-get -f -q -y install",
-          'gem install --no-ri --no-rdoc fpm'
+          'gem install --no-ri --no-rdoc fpm',
+          "apt-get install -q -y #{node[:pkg_build][:ruby][:package_dependencies].join(' ')}"
         ]
       end
     end
