@@ -6,6 +6,7 @@ action :build do
     content JSON.pretty_generate(
       Mixin::DeepMerge.merge({
           :pkg_build => {
+            :pkg_prefix => node[:pkg_build][:pkg_prefix],
             :reprepro => false,
             :isolate => false
           },
