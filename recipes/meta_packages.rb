@@ -9,7 +9,7 @@ if(node[:pkg_build][:isolate])
     run_list %w(recipe[pkg-build::meta_packages])
     not_if do
       node[:pkg_build][:meta_mappings].keys.map do |pkg_name|
-        File.exists?(File.join(node[:fpm_tng][:package_dir], "#{pkg_name}-1.0.0.deb")) ? nil : pkg_name
+        File.exists?(File.join(node[:fpm_tng][:package_dir], "#{pkg_name}-1.0.deb")) ? nil : pkg_name
       end.compact.empty?
     end
   end
