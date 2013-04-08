@@ -11,7 +11,7 @@ if(node[:pkg_build][:isolate])
       node[:pkg_build][:meta_mappings].map do |meta_name, value|
         if(value.is_a?(Array))
           to_process = value
-        elsif(value.kind_of?(Hash) || value.kind_of?(Chef::Attribute))
+        elsif(value.kind_of?(Hash) || value.kind_of?(Chef::Node::Attribute))
           to_process = [value.to_hash]
         else
           to_process = [{:version => '1.0.0', :dependencies => value}]
@@ -30,7 +30,7 @@ else
   node[:pkg_build][:meta_mappings].each do |meta_name, value|
     if(value.is_a?(Array))
       to_process = value
-    elsif(value.kind_of?(Hash) || value.kind_of?(Chef::Attribute))
+    elsif(value.kind_of?(Hash) || value.kind_of?(Chef::Node::Attribute))
       to_process = [value.to_hash]
     else
       to_process = [{:version => '1.0.0', :dependencies => value}]
