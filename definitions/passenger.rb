@@ -28,6 +28,12 @@ define :build_passenger, :version => nil, :ruby_version => nil, :repository => n
   gem_prefix = node[:pkg_build][:gems][:dir] || node[:languages][:ruby][:gems_dir]
   pass_prefix = "gems/passenger-#{params[:version]}"
 
+  if(Gem::Version.new(params[:version]).segments.first < 4)
+    apache_mod_path = 'ext/apache2/mod_passenger.so'
+  else
+    apache_mod_path = 'libout/apache2/mod_passenger.so'
+  end
+
   builder_dir "passenger-#{params[:version]}" do
     init_command "#{node[:pkg_build][:gems][:exec]} install --install-dir . --no-ri --no-rdoc --ignore-dependencies -E --version #{params[:version]} passenger"
     suffix_cwd pass_prefix
@@ -36,7 +42,7 @@ define :build_passenger, :version => nil, :ruby_version => nil, :repository => n
       'mkdir -p $PKG_DIR/libmod/etc/apache2/mods-available',
       "mkdir -p $PKG_DIR/libmod/#{node[:pkg_build][:passenger][:root]}/apache2/modules",
       "mkdir -p $PKG_DIR/libmod/#{node[:pkg_build][:passenger][:root]}/phusion-passenger",
-      "cp ext/apache2/mod_passenger.so $PKG_DIR/libmod/#{node[:pkg_build][:passenger][:root]}/apache2/modules",
+      "cp #{apache_mod_path} $PKG_DIR/libmod/#{node[:pkg_build][:passenger][:root]}/apache2/modules",
       "echo \"<IfModule mod_passenger.c>\\n  PassengerRoot #{node[:pkg_build][:gems][:dir]}/#{pass_prefix}\n  PassengerRuby #{node[:pkg_build][:ruby_bin]}\\n</IfModule>\\n\" > $PKG_DIR/libmod/etc/apache2/mods-available/passenger.conf",
       "echo \"LoadModule passenger_module #{node[:pkg_build][:passenger][:root]}/apache2/modules/mod_passenger.so\" > $PKG_DIR/libmod/etc/apache2/mods-available/passenger.load",
       "mkdir -p $PKG_DIR/gem/#{node[:pkg_build][:gems][:dir]}",
