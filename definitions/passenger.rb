@@ -52,7 +52,23 @@ define :build_passenger, :version => nil, :ruby_version => nil, :repository => n
     ]
   end
 
-  fpm_tng_gemdeps 'passenger' do
+  conflict_versions = []
+  if(params[:multi_rubies])
+    conflict_versions = params[:multi_rubies].map do |version|
+      unless(version == params[:ruby_version])
+        [node[:pkg_build][:pkg_prefix], 'rubygem', version].compact.join('-')
+      end
+    end.compact
+  end
+  if(node[:pkg_build][:replace_deprecated])
+    gem_conflicts = conflict_versions + [[node[:pkg_build][:pkg_prefix], 'rubygem'].compact.join('-')]
+    lib_conflicts = conflict_versions + [node[:pkg_build][:pkg_prefix]]
+  else
+    gem_conflicts = lib_conflicts = conflict_versions
+  end
+
+
+  deps_resource = fpm_tng_gemdeps 'passenger' do
     gem_fix_name false
     gem_package_name_prefix [node[:pkg_build][:pkg_prefix], 'rubygem', params[:ruby_version]].compact.join('-')
 #    package_name_suffix params[:ruby_version] if params[:ruby_version] Enable this when FPM release fixed version
@@ -71,6 +87,7 @@ define :build_passenger, :version => nil, :ruby_version => nil, :repository => n
     depends [
       'apache2', 'apache2-mpm-prefork', passenger_gem_name, node[:pkg_build][:passenger][:ruby_dependency]
     ].compact
+    conflicts lib_conflicts.map{|v| "#{v}-libapache2-mod-passenger"}
     reprepro node[:pkg_build][:reprepro]
     repository params[:repository] if params[:repository]
   end
@@ -80,7 +97,8 @@ define :build_passenger, :version => nil, :ruby_version => nil, :repository => n
     version params[:version]
     description 'Passenger apache module installation'
     chdir File.join(node[:builder][:packaging_dir], "passenger-#{params[:version]}", 'gem')
-    depends %w(fastthread daemon-controller rack).map{|x|[node[:pkg_build][:pkg_prefix], 'rubygem', params[:ruby_version], x].compact.join('-') }
+    depends lazy{ deps_resource.generated_dependencies }
+    conflicts gem_conflicts.map{|v| "#{v}-passenger"}
     reprepro node[:pkg_build][:reprepro]
     repository params[:repository] if params[:repository]
   end
