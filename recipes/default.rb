@@ -78,7 +78,7 @@ if(node[:pkg_build][:isolate])
         'rm -f /etc/sysctl.d/10-ptrace.conf',
         'rm -f /etc/sysctl.d/10-kernel-hardening.conf'
       ] + pkg_coms + [
-        'curl -L https://www.opscode.com/chef/install.sh | bash'
+        "curl -L https://www.opscode.com/chef/install.sh | bash -s -- -v #{Chef::VERSION}"
       ]
     end
     lxc = ::Lxc.new(name)
