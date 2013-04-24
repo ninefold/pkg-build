@@ -17,3 +17,5 @@ default[:pkg_build][:maintainer] = 'Heavy Water'
 default[:pkg_build][:vendor] = 'Heavy Water'
 default[:pkg_build][:homepage] = 'http://www.hw-ops.com'
 default[:pkg_build][:replace_deprecated] = false
+default[:pkg_build][:add_repo][:codenames] = []
+default[:pkg_build][:add_repo][:distribution] = node[:lsb][:codename]
