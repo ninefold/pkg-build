@@ -1,8 +1,9 @@
+include_recipe 'pkg-build'
+
 if(node[:pkg_build][:isolate])
   [node[:pkg_build][:redis][:version], node[:pkg_build][:redis][:versions]].flatten.uniq.each do |ver|
     pkg_build_isolate "redis-#{ver}" do
       container 'ubuntu_1204'
-      default[:pkg_build][:redis][:user] = 'redis'
       attributes(
         :pkg_build => {
           :redis => {
@@ -26,10 +27,11 @@ if(node[:pkg_build][:isolate])
 else
   include_recipe 'pkg-build::deps'
   [node[:pkg_build][:redis][:version], node[:pkg_build][:redis][:versions]].flatten.uniq.each do |ver|
-  build_redis ver do
-    version ver
-    if(node[:pkg_build][:repository])
-      repository node[:pkg_build][:repository]
+    build_redis ver do
+      version ver
+      if(node[:pkg_build][:repository])
+        repository node[:pkg_build][:repository]
+      end
     end
   end
 end
