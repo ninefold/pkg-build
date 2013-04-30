@@ -1,7 +1,6 @@
-include_recipe 'pkg-build'
-
 if(node[:pkg_build][:isolate])
-  [node[:pkg_build][:redis][:version], node[:pkg_build][:redis][:versions]].flatten.uniq.each do |ver|
+  include_recipe 'pkg-build'
+  [node[:pkg_build][:redis][:version], node[:pkg_build][:redis][:versions]].flatten.compact.uniq.each do |ver|
     pkg_build_isolate "redis-#{ver}" do
       container 'ubuntu_1204'
       attributes(
@@ -18,7 +17,7 @@ if(node[:pkg_build][:isolate])
         File.exists?(
           File.join(
             node[:fpm_tng][:package_dir],
-            "#{[node[:pkg_build][:pkg_prefix], 'redis-server'].compact.join('-')}.deb"
+            "#{[node[:pkg_build][:pkg_prefix], 'redis-server', ver].compact.join('-')}.deb"
           )
         )
       end
