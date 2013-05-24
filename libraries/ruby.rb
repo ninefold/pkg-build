@@ -14,7 +14,7 @@ module PkgBuild
         gname = []
         gname << node[:pkg_build][:pkg_prefix]
         gname << 'rubygem'
-        gname << ruby_version if ruby_version
+        gname << ruby_version if ruby_version && node[:pkg_build][:ruby][:suffix_version]
         gname << name
         gname.compact.join('-')
       end
