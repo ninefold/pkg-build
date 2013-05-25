@@ -10,10 +10,10 @@ module PkgBuild
         name.compact.join('-')
       end
 
-      def gem_name(node, name, ruby_version=nil)
+      def gem_name(node, name, ruby_version=nil, include_rubygem=true)
         gname = []
         gname << node[:pkg_build][:pkg_prefix]
-        gname << 'rubygem'
+        gname << 'rubygem' if include_rubygem
         gname << ruby_version if ruby_version && node[:pkg_build][:ruby][:suffix_version]
         gname << name
         gname.compact.join('-')
