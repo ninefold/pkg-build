@@ -34,6 +34,14 @@ define :build_ruby, :version => nil, :patchlevel => nil, :repository => nil do
     mode 0755
   end
 
+  pkg_conflicts = []
+  if(node[:pkg_build][:replace_deprecated])
+    pkg_conflicts << [node[:pkg_build][:pkg_prefix], 'ruby'].compact.join('-')
+  end
+  if(node[:pkg_build][:ruby][:conflicts])
+    pkg_conflicts += Array(node[:pkg_build][:ruby][:conflicts])
+  end
+  
   fpm_tng_package ruby_build do
     package_name ruby_name
     package File.join(node[:fpm_tng][:package_dir], "#{ruby_build}.deb")
