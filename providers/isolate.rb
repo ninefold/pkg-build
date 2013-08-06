@@ -1,5 +1,7 @@
 action :build do
 
+  run_context.include_recipe 'lxc'
+
   dna_json = ::File.join(node[:pkg_build][:isolate_solo_dir], "#{rand(99999999)}-solo-dna.json")
 
   directory ::File.dirname(dna_json) do
@@ -22,7 +24,7 @@ action :build do
             :vendor => node[:pkg_build][:vendor],
             :maintainer => node[:pkg_build][:maintainer]
           },
-          :run_list => new_resource.run_list
+          :run_list => ['recipe[apt]'] + new_resource.run_list
         }, new_resource.attributes
       )
     )
