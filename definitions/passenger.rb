@@ -28,10 +28,14 @@ define :build_passenger, :version => nil, :ruby_version => nil, :repository => n
   gem_prefix = node[:pkg_build][:gems][:dir] || node[:languages][:ruby][:gems_dir]
   pass_prefix = "gems/passenger-#{params[:version]}"
 
-  if(Gem::Version.new(params[:version]).segments.first < 4)
+  gem_version = Gem::Version.new(params[:version])
+  
+  if(gem_version.segments.first < 4)
     apache_mod_path = 'ext/apache2/mod_passenger.so'
-  else
+  elsif(gem_version.segments.first == 4 && gem_version.segments[2] < 10)
     apache_mod_path = 'libout/apache2/mod_passenger.so'
+  else
+    apache_mod_path = 'buildout/apache2/mod_passenger.so'
   end
 
   builder_dir "passenger-#{params[:version]}" do

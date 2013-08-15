@@ -1,3 +1,6 @@
+## v0.2.2
+* Update passenger build to account for updated module path
+
 ## v0.2.0
 * Allow packages to be built in isolation
 * Tailor support towards `repository` cookbook support (reprepro support still remains)
