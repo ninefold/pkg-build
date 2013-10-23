@@ -1,13 +1,13 @@
-include_recipe 'pkg-build::deps'
-
 if(node[:pkg_build][:isolate])
   include_recipe 'lxc'
   include_recipe 'apt::cacher-ng'
 
   # old version of apt? kill the proxy template!
   file '/etc/apt/apt.conf.d/01proxy' do
-    action :nothing
+    action :delete
   end.run_action(:delete)
+
+  include_recipe 'pkg-build::deps'
 
   # Force an early restart since template update is delayed
   service 'pkg-build-cacher' do
@@ -105,4 +105,6 @@ if(node[:pkg_build][:isolate])
   )
   CookbookSynchronizer.new(cookbook_hash, EventDispatch::Dispatcher.new).sync_cookbooks
   Chef::Log.warn 'Full cookbook sync has been completed!'
+else
+  include_recipe 'pkg-build::deps'
 end
