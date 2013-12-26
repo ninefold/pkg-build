@@ -1,3 +1,9 @@
+## v0.2.4
+* Permit no patch version rubies
+
+## v0.2.3
+* Check for info[:versions] first
+
 ## v0.2.2
 * Update passenger build to account for updated module path
 
