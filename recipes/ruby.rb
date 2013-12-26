@@ -9,7 +9,7 @@ comparable_versions = []
 
 versions.uniq.each do |r_ver|
   version, patchlevel = r_ver.split('-')
-  comparable_versions << [Gem::Version.new(version), patchlevel.empty? 0 : patchlevel[1,patchlevel.length].to_i]
+  comparable_versions << [Gem::Version.new(version), patchlevel.empty? ? 0 : patchlevel[1,patchlevel.length].to_i]
   
   if(node[:pkg_build][:isolate])
     pkg_build_isolate "ruby-#{version}-#{patchlevel}" do
