@@ -9,12 +9,11 @@ comparable_versions = []
 
 versions.uniq.each do |r_ver|
   version, patchlevel = r_ver.split('-')
-  comparable_versions << [Gem::Version.new(version), patchlevel.nil? ? 0 : patchlevel[1,patchlevel.length].to_i]
-  
-  log "Comparable versions are: Raw (#{r_ver.to_json}) Split (#{comparable_versions.to_json})"
+  comparable_versions << [Gem::Version.new(version), patchlevel.nil? ? nil : patchlevel[1,patchlevel.length].to_i]
 
   if(node[:pkg_build][:isolate])
-    pkg_build_isolate "ruby-#{version}-#{patchlevel}" do
+    
+    pkg_build_isolate patchlevel.nil? ? "ruby-#{version}" : "ruby-#{version}-#{patchlevel}" do
       container 'ubuntu_1204'
       attributes(
         :pkg_build => {
