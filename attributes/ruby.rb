@@ -3,6 +3,7 @@ default[:pkg_build][:ruby][:versions] = []
 default[:pkg_build][:ruby][:version] = '2.1.0'
 default[:pkg_build][:ruby][:patchlevel] = ''
 default[:pkg_build][:ruby][:install_prefix] = '/usr/local'
+default[:pkg_build][:ruby][:rubygems][:version] = 'latest' # or set to rubygems version
 default[:pkg_build][:ruby][:suffix_version] = false
 default[:pkg_build][:ruby][:package_dependencies] = %w(
   openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev 
