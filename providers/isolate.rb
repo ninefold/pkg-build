@@ -12,6 +12,9 @@ action :build do
     mode 0644
     content JSON.pretty_generate(
       Mixin::DeepMerge.merge({
+          :apt => {
+            :compile_time_update => true
+          },
           :pkg_build => {
             :pkg_prefix => node[:pkg_build][:pkg_prefix],
             :reprepro => false,
@@ -29,6 +32,8 @@ action :build do
       )
     )
   end
+
+  Chef::Log.info("Ruby node: " + node[:languages][:ruby].to_json)
 
   lxc_ephemeral "Isolated: #{new_resource.name}" do
     command "chef-solo -j #{dna_json}"

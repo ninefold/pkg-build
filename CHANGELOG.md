@@ -1,3 +1,6 @@
+## v0.2.5
+* Force compile time apt-get update
+
 ## v0.2.4
 * Permit no patch version rubies
 
