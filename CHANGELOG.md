@@ -1,6 +1,6 @@
-## v0.2.6
+## v0.3.0
 * Add nginx as a package
-
+  
 ## v0.2.5
 * Force compile time apt-get update
 
