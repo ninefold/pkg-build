@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -eu
+
+USER="<%= node[:pkg_build][:nginx][:user] %>"
+GROUP="<%= node[:pkg_build][:nginx][:group] %>"
+
+chown $USER:$GROUP /var/lib/nginx
+chown $USER:$GROUP /var/log/nginx

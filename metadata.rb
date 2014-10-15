@@ -3,7 +3,7 @@ maintainer 'Heavy Water'
 maintainer_email 'support@hw-ops.com'
 description 'Recipes for building packages'
 
-version '0.2.5'
+version '0.3.0'
 
 supports 'ubuntu'
 
