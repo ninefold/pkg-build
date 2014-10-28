@@ -1,3 +1,6 @@
+## v0.3.1
+* Fix ruby version patch response if there is no patch version
+
 ## v0.3.0
 * Add nginx as a package
   
