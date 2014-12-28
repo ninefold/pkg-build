@@ -6,7 +6,7 @@ if(node[:pkg_build][:isolate])
         :meta_mappings => node[:pkg_build][:meta_mappings]
       }
     )
-    run_list %w(recipe[pkg-build::install_ohai recipe[pkg-build::meta_packages])
+    run_list %w(recipe[pkg-build::install_ohai] recipe[pkg-build::meta_packages])
     not_if do
       to_process = []
       node[:pkg_build][:meta_mappings].map do |meta_name, info|

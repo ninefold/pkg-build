@@ -8,14 +8,11 @@
 # to do this at the start of the run using resource
 # available in ninefold_handlers cookbook
 
-chef_gem "ohai" do
-  action :remove
-end
-
 ninefold_handlers_gem "ohai" do
   source 'git'
   git_path 'https://github.com/ninefold/ohai'
   git_ref 'nf_hotfix'
   install_type :upgrade
+  remove_first true
   action :nothing
 end.run_action(:install)

@@ -12,7 +12,7 @@ if(node[:pkg_build][:isolate])
           }
         }
       )
-      run_list %w(recipe[pkg-build::install_ohai recipe[pkg-build::redis])
+      run_list %w(recipe[pkg-build::install_ohai] recipe[pkg-build::redis])
       not_if do
         File.exists?(
           File.join(
