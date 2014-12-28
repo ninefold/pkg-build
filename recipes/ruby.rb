@@ -26,7 +26,7 @@ versions.uniq.each do |r_ver|
           }
         }
       )
-      run_list %w(recipe[pkg-build::install_ohai recipe[pkg-build::ruby])
+      run_list %w(recipe[pkg-build::install_ohai] recipe[pkg-build::ruby])
       not_if do
         ruby_build = PkgBuild::Ruby.ruby_build(node, version, patchlevel)
         File.exists?(File.join(node[:fpm_tng][:package_dir], "#{ruby_build}.deb"))
