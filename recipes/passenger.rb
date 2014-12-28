@@ -23,7 +23,7 @@ if(node[:pkg_build][:isolate])
             :packaging_dir => File.join(node[:builder][:packaging_dir], "ruby_#{r_ver}")
           }
         )
-        run_list %w(recipe[pkg-build::passenger])
+        run_list %w(recipe[pkg-build::install_ohai recipe[pkg-build::passenger])
         not_if do
           File.exists?(File.join(node[:fpm_tng][:package_dir], "#{PkgBuild::Ruby.gem_name(node, 'libapache2-mod-passenger', r_ver)}-#{passenger_version}.deb")) &&
             File.exists?(File.join(node[:fpm_tng][:package_dir], "#{PkgBuild::Ruby.gem_name(node, 'passenger', r_ver)}-#{passenger_version}.deb"))
