@@ -83,7 +83,8 @@ if(node[:pkg_build][:isolate])
         'rm -f /etc/sysctl.d/10-ptrace.conf',
         'rm -f /etc/sysctl.d/10-kernel-hardening.conf'
       ] + pkg_coms + [
-        "curl -L https://www.opscode.com/chef/install.sh | bash -s -- -v #{Chef::VERSION}"
+        "curl -L https://www.opscode.com/chef/install.sh | bash -s -- -v #{Chef::VERSION}",
+        'sed -i "s|::Config|RbConfig|g" /opt/chef/embedded/lib/ruby/gems/1.9.1/gems/ohai*/lib/ohai/plugins/ruby.rb'
       ]
     end
     lxc = ::Lxc.new(name)

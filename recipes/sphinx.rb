@@ -13,7 +13,7 @@ if(node[:pkg_build][:isolate])
           }
         }
       )
-      run_list %w(recipe[pkg-build::install_ohai] recipe[pkg-build::sphinx])
+      run_list %w(recipe[pkg-build::sphinx])
       not_if do
         File.exists?(
           File.join(
