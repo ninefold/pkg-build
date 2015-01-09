@@ -35,7 +35,7 @@ action :build do
   log "Isolated lxc/chef build about to start for #{new_resource.name}. Chef logs will appear once complete."
 
   lxc_ephemeral "Isolated: #{new_resource.name}" do
-    command "chef-solo -j #{dna_json}"
+    command "chef-solo -l #{Chef::Config[:log_level].to_s} -j #{dna_json}"
     base_container new_resource.container
   end
 end
