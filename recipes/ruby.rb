@@ -12,7 +12,7 @@ versions.uniq.each do |r_ver|
   comparable_versions << [Gem::Version.new(version), patchlevel.nil? ? nil : patchlevel[1,patchlevel.length].to_i]
 
   if(node[:pkg_build][:isolate])
-    
+
     pkg_build_isolate patchlevel.nil? ? "ruby-#{version}" : "ruby-#{version}-#{patchlevel}" do
       container 'ubuntu_1204'
       attributes(
@@ -58,7 +58,13 @@ if(node[:pkg_build][:isolate])
     ruby_build = PkgBuild::Ruby.ruby_build(node, install_version.first.version, install_version.last)
     ruby_dpkg = File.join(node[:fpm_tng][:package_dir], "#{ruby_build}.deb")
 
-    commands = ["dpkg -i #{ruby_dpkg}; apt-get -f -q -y install", "gem install --no-ri --no-rdoc rubygems-update"]
+    commands = [
+      "apt-get update",
+      "apt-get -q -y install #{node[:pkg_build][:ruby][:install_dependencies].join(' ')}",
+      "dpkg -i #{ruby_dpkg}",
+      "apt-get -f -q -y install",
+      "gem install --no-ri --no-rdoc rubygems-update"
+    ]
     if node[:pkg_build][:ruby][:rubygems][:version] == 'latest'
       commands << "gem update --system"
     else

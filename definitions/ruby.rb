@@ -42,7 +42,7 @@ define :build_ruby, :version => nil, :patchlevel => nil, :repository => nil do
   if(node[:pkg_build][:ruby][:conflicts])
     pkg_conflicts += Array(node[:pkg_build][:ruby][:conflicts])
   end
-  
+
   fpm_tng_package ruby_build do
     package_name ruby_name
     package File.join(node[:fpm_tng][:package_dir], "#{ruby_build}.deb")
@@ -51,10 +51,7 @@ define :build_ruby, :version => nil, :patchlevel => nil, :repository => nil do
     version r_fullversion
     chdir File.join(node[:builder][:packaging_dir], ruby_build)
     after_install File.join(node[:builder][:build_dir], ruby_build, 'postinst')
-    depends %w(
-      ca-certificates libc6 libffi6 libgdbm3 libncursesw5 libreadline6 libssl1.0.0 
-      libtinfo5 libyaml-0-2 zlib1g
-    )
+    depends node[:pkg_build][:ruby][:install_dependencies]
     # provides - rake gem
     conflicts [node[:pkg_build][:pkg_prefix], 'ruby'].compact.join('-') if node[:pkg_build][:replace_deprecated]
     reprepro node[:pkg_build][:reprepro]

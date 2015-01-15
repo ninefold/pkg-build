@@ -29,7 +29,7 @@ define :build_passenger, :version => nil, :ruby_version => nil, :repository => n
   pass_prefix = "gems/passenger-#{params[:version]}"
 
   gem_version = Gem::Version.new(params[:version])
-  
+
   if(gem_version.segments.first < 4)
     apache_mod_path = 'ext/apache2/mod_passenger.so'
   elsif(gem_version.segments.first == 4 && gem_version.segments[2] < 10)
@@ -101,7 +101,13 @@ define :build_passenger, :version => nil, :ruby_version => nil, :repository => n
     version params[:version]
     description 'Passenger apache module installation'
     chdir File.join(node[:builder][:packaging_dir], "passenger-#{params[:version]}", 'gem')
-    depends lazy{ deps_resource.generated_dependencies }
+    depends lazy {
+      if Gem::Version.new(params[:ruby_version]) < Gem::Version.new('2.2.0')
+        deps_resource.generated_dependencies
+      else
+        deps_resource.generated_dependencies.reject { |dep| dep.include?('rake') }
+      end
+    }
     conflicts gem_conflicts.map{|v| "#{v}-passenger"}
     reprepro node[:pkg_build][:reprepro]
     repository params[:repository] if params[:repository]
